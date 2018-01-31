@@ -1,0 +1,190 @@
+
+#include "stdafx.h"
+#include <iostream>
+#include<Windows.h>
+using namespace std;
+
+class Time {
+public:
+	Time() {};
+	Time(int set_hour, int set_minute, int set_seconds) {
+		hour = set_hour;
+		minute = set_minute;
+		seconds = set_seconds;
+	}
+	Time  operator=(Time  obj);
+	Time & operator+=(int variable);
+	Time & operator-(Time  one);
+	int get_hour() {
+		return this->hour;
+	};
+	int get_minute() {
+		return this->minute;
+	}
+	int get_seconds() {
+		return this->seconds;
+	}
+	void set_hour(int variable) {
+		hour = variable;
+	}
+	void set_minute(int variable) {
+		minute = variable;
+	}
+	void set_seconds(int variable) {
+		seconds = variable;
+	}
+private:
+	int hour, minute, seconds;
+};
+
+Time & Time::operator+=(int variable) {
+	this->seconds += variable;
+	if (this->seconds >= 60) {
+		int dodat = this->seconds / 60;
+		int ostatok = this->seconds % 60;
+		this->seconds = ostatok;
+		this->minute += dodat;
+		if (this->minute >= 60) {
+			dodat = this->minute / 60;
+			ostatok = this->minute % 60;
+			this->hour += dodat;
+			this->minute = ostatok;
+			if (this->hour>24) {
+				this->hour %= 24;
+			}
+		}
+	}
+	return *this;
+}
+Time  Time::operator=(Time obj) {
+
+	hour = obj.get_hour();
+	minute = obj.get_minute();
+	seconds = obj.get_seconds();
+	return *this;
+};
+bool operator==(Time &one, Time & two) {
+	bool result = false;
+	if ((one.get_seconds() == two.get_seconds()) && (one.get_minute() == two.get_minute()) && (one.get_hour() == two.get_hour())) {
+		result = true;
+	}
+	return result;
+}
+bool operator>(Time & one, Time & two) {
+	bool result = false;
+	if (one.get_hour()>two.get_hour()) {
+		result = true;
+	}
+	else if (one.get_hour() == two.get_hour()) {
+		if (one.get_minute()>two.get_minute()) {
+			result = true;
+		}
+		else if (one.get_minute() == two.get_minute()) {
+			if (one.get_seconds()>two.get_seconds()) {
+				result = true;
+			}
+		}
+	}
+	return result;
+}
+bool operator<(Time & two, Time & one) {
+	bool result = false;
+	if (one.get_hour()>two.get_hour()) {
+		result = true;
+	}
+	else if (one.get_hour() == two.get_hour()) {
+		if (one.get_minute()>two.get_minute()) {
+			result = true;
+		}
+		else if (one.get_minute() == two.get_minute()) {
+			if (one.get_seconds()>two.get_seconds()) {
+				result = true;
+			}
+		}
+	}
+	return result;
+}
+istream& operator>>(istream &s, Time &obj) {
+	int set_hour, set_minute, set_seconds;
+	cout << "Write hour: ";
+	cin >> set_hour;
+	cout << endl;
+	cout << "Write minute: ";
+	cin >> set_minute;
+	cout << endl;
+	cout << "Write seconds: ";
+	cin >> set_seconds;
+	cout << endl;
+	obj.set_hour(set_hour);
+	obj.set_minute(set_minute);
+	obj.set_seconds(set_seconds);
+	return s;
+}
+ostream &operator<<(ostream &s, Time &obj) {
+	cout << obj.get_hour() << "." << obj.get_minute() << "." << obj.get_seconds() << endl;
+	return s;
+}
+Time & Time::operator-(Time two) {
+	int variable;
+	variable = this->hour - two.get_hour();
+	this->hour = variable;
+	variable = this->minute - two.get_minute();
+	this->minute = variable;
+	variable = this->seconds - two.get_seconds();
+	this->seconds = variable;
+
+	return *this;
+}
+int main() {
+	Time b(12, 45, 45);
+	Time a(6, 30, 20);
+	Time c;
+	cout << "perehruzka <<(vvid object a ³ b" << endl;
+	cout << "time a=" << a << endl;
+	cout << "time b=" << b << endl;
+	cout << endl;
+	cout << "perehruzka = (prusvoyuvannya object a object c)" << endl;
+	c = a;
+	cout << "time c=" << c << endl;
+	cout << endl;
+	cout << "perehruzka >>(vvid object c)" << endl;
+	cin >> c;
+	cout << "time c=" << c << endl;
+	cout << endl;
+	cout << "perehruzka - (vid object b vidnimaymo object a)" << endl;
+	c = b - a;
+	cout << c << endl;
+	cout << endl;
+	cout << "perehruzka ==(perevirka  a==b)" << endl;
+	if (a == b) {
+		cout << true << endl;
+	}
+	else {
+		cout << false << endl;
+	};
+	cout << endl;
+	cout << "perehruzka >(perevirka  a>b)" << endl;
+	if (a>b) {
+		cout << true << endl;
+	}
+	else {
+		cout << false << endl;
+	};
+	cout << endl;
+	cout << "perehruzka <(perevirka  a<b)" << endl;
+	if (a == b) {
+		cout << true << endl;
+	}
+	else {
+		cout << false << endl;
+	};
+	cout << endl;
+	int k;
+	cout << "perehruzka +=" << endl;
+	cout << "vvedit chas v secundah:" << endl;
+	cin >> k;
+	cout << "time c=" << c << endl;
+	c += k;
+	cout << "time+=k =" << c << endl;
+	system("pause");
+}

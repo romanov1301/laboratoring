@@ -1,0 +1,308 @@
+#include "stdafx.h"
+#include "iostream"
+#define _USE_MATH_DEFINES
+#include "math.h"
+using namespace std;
+
+class Point
+{
+public:
+	int coordinateX;
+	int coordinateY;
+
+	Point()
+	{
+		coordinateX = 0;
+		coordinateY = 0;
+	}
+
+	Point(int x, int y)
+	{
+		coordinateX = x;
+		coordinateY = y;
+	}
+
+	void Print()
+	{
+		cout << "point (" << coordinateX << ";" << coordinateY << ")" << endl;
+	}
+};
+
+class Segment
+{
+protected:
+	Point start;
+	Point end;
+public:
+	Segment() {}
+	Segment(Point a, Point b)
+	{
+		start = a;
+		end = b;
+	}
+	Segment(int xA, int yA, int xB, int yB)
+	{
+		Point a(xA, yA);
+		Point b(xB, yB);
+		start = a;
+		end = b;
+	}
+
+	double GetLenght()
+	{
+		double difX = end.coordinateX - start.coordinateX;
+		double difY = end.coordinateY - start.coordinateY;
+		double temp = (pow(difX, 2) + pow(difY, 2));
+		double lenght = sqrt(temp);
+		return lenght;
+	}
+
+	void Print()
+	{
+		cout << "Segment has start at: ";
+		start.Print();
+		cout << "Segment has end at: ";
+		end.Print();
+	}
+};
+
+
+class Circle
+{
+protected:
+	Point center;
+	Segment radius;
+public:
+	Circle() {};
+	Circle(Point _center, Segment _radius)
+	{
+		center = _center;
+		radius = _radius;
+	}
+	double Lenght()
+	{
+		double l = 2 * M_PI*radius.GetLenght();
+		return l;
+	}
+	void Print()
+	{
+		cout << "Circle has center at: ";
+		center.Print();
+		cout << "Circle has radius: ";
+		radius.Print();
+		cout << "Circle has lenght: " << Lenght() << endl;
+	}
+};
+
+class Triangle
+{
+	Point p1;
+	Point p2;
+	Point p3;
+
+public:
+	Triangle()
+	{
+		Point p1(-1, 0);
+		Point p2(2, 0);
+		Point p3(1, 0);
+	}
+
+	Triangle(Point po1, Point po2, Point po3)
+	{
+		p1 = Point(po1.coordinateX, po1.coordinateY);
+		p2 = Point(po2.coordinateX, po2.coordinateY);
+		p3 = Point(po3.coordinateX, po3.coordinateY);
+	}
+
+	Triangle(int x1, int y1,
+		int x2, int y2,
+		int x3, int y3)
+	{
+		p1 = Point(x1, y1);
+		p2 = Point(x2, y2);
+		p3 = Point(x3, y3);
+	}
+
+	double GetLenghtOfSide(Point start, Point end)
+	{
+		double difX = end.coordinateX - start.coordinateX;
+		double difY = end.coordinateY - start.coordinateY;
+		double temp = (pow(difX, 2) + pow(difY, 2));
+		double lenght = sqrt(temp);
+		return lenght;
+	}
+
+	double Perimeter()
+	{
+		double AB = GetLenghtOfSide(p1, p2);
+		double BC = GetLenghtOfSide(p2, p3);
+		double AC = GetLenghtOfSide(p3, p1);
+		return AB + BC + AC;
+	}
+
+	void Print()
+	{
+		cout << "Point A: ";
+		p1.Print();
+		cout << "Point B: ";
+		p2.Print();
+		cout << "Point C: ";
+		p3.Print();
+		cout << "Perimeter: " << Perimeter() << endl;
+	}
+};
+
+class Sphere : public Circle
+{
+protected:
+	double volume;
+public:
+	Sphere() { volume = 0; }
+	Sphere(Point _center, Segment _radius)
+	{
+		center = _center;
+		radius = _radius;
+		volume = 0.75*M_PI*(radius.GetLenght());
+	}
+
+	double GetVolume()
+	{
+		return volume;
+	}
+
+	void Print()
+	{
+		cout << "Sphere has center at: ";
+		center.Print();
+		cout << "Sphere has radius: ";
+		radius.Print();
+		cout << "Sphere has volume: " << volume << endl;
+	}
+};
+
+
+class Cone : public Circle
+{
+protected:
+	Point top;
+	Segment height;
+	double volume;
+public:
+	Cone()
+	{
+		Point top(1, 1);
+		Segment height(1, 1, 0, 0);
+		volume = 0;
+	}
+	Cone(Point _center, Segment _radius, Point _top, Segment _height)
+	{
+		center = _center;
+		radius = _radius;
+		top = _top;
+		height = _height;
+		volume = (M_PI*pow(radius.GetLenght(), 2)*height.GetLenght()) / 3;
+	}
+
+	double GetVolume()
+	{
+		return volume;
+	}
+
+	void Print()
+	{
+		cout << "Cone's basis has center at: ";
+		center.Print();
+		cout << "Cone's basis has radius: ";
+		radius.Print();
+		cout << "Cone has top at: ";
+		top.Print();
+		cout << "Cone has height: " << height.GetLenght() << endl;
+		cout << "Cone has volume: " << volume << endl;
+	}
+
+};
+
+class Cylinder : public Circle
+{
+protected:
+	Segment height;
+	double volume;
+public:
+	Cylinder()
+	{
+		Segment height(1, 1, 0, 0);
+		volume = 0;
+	}
+	Cylinder(Point _center, Segment _radius, Segment _height)
+	{
+		center = _center;
+		radius = _radius;
+		height = _height;
+		volume = (M_PI*pow(radius.GetLenght(), 2)*height.GetLenght());
+	}
+
+	double GetVolume()
+	{
+		return volume;
+	}
+
+	void Print()
+	{
+
+		cout << "Cylinder's basises have center at: ";
+		center.Print();
+		cout << "Cylinder's basises have radius: ";
+		radius.Print();
+		cout << "Cylinder has height: " << height.GetLenght() << endl;
+		cout << "Cylinder has volume: " << volume << endl;
+	}
+
+};
+
+
+int main()
+{
+	cout << "\t\tCircle" << endl;
+	Point center(1, 2);
+	Segment radius(1, 2, -1, -2);
+	Circle circle(center, radius);
+	circle.Print();
+	cout << endl << endl;
+
+	cout << "\t\tTriangle" << endl;
+	Triangle triangle(1, 2, -1, 1, 1, -2);
+	triangle.Print();
+	cout << endl << endl;
+
+	cout << "\t\tSphere" << endl;
+	Point centerS(4, 5);
+	Segment radiusS(4, 5, 9, 0);
+	Sphere sphere(centerS, radiusS);
+	sphere.Print();
+	cout << endl << endl;
+
+
+	cout << "\t\tCone: " << endl;
+	int xstart, ystart, xend, yend;
+	cout << "Enter four coordinates of the height for creating cone and cylinder: " << endl;
+	cout << "Start x: ";
+	cin >> xstart;
+	cout << "Start y: ";
+	cin >> ystart;
+	cout << "End x: ";
+	cin >> xend;
+	cout << "End y: ";
+	cin >> yend;
+	Point top(xstart, ystart);
+	Segment height(xstart, ystart, xend, yend);
+	Cone cone(centerS, radiusS, top, height);
+	cone.Print();
+	cout << endl << endl;
+
+	cout << "\t\tCylinder: " << endl;
+	Cylinder cylinder(centerS, radiusS, height);
+	cylinder.Print();
+	cout << endl << endl;
+	system("pause");
+}
